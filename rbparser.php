@@ -132,12 +132,25 @@ if ($target=="gate_race_and_ticket"){
     foreach($arr_url as $url)
     {
         //"https://ros-bilet.ru".
-        $response=getUrl($url);
+        $response=getUrl("https://ros-bilet.ru".$url);
 
         $test_desable = mb_substr_count($response, "В данный момент бронирование невозможно");
         $test_enable = mb_substr_count($response, "Для данного рейса доступны следующие виды брони");
+
+        $pos_start = mb_strpos($response, '<a name="route"></a>', 0);
+        $pos_stop = mb_strpos($response, '<a name="baggage"></a>', 0);
+        $raceGlobal = mb_substr($response, $pos_start, $pos_stop );
+
+        $pos_start = mb_strpos($raceGlobal, '<div class="field-item even">', 0);
+        //<div class="field-item even">
+        $pos_stop = mb_strpos($raceGlobal, '</div>', $pos_start+29);
+        $race_route=explode(',',trim(mb_substr($raceGlobal, $pos_start+29, $pos_stop-$pos_start-29)));
+        $end_stat=count($race_route)-1;
+        
+        //</div>
         echo "
         Рейс:".$url."
+        из ".$race_route[0]." в ".$race_route[$end_stat]."
         Рейс недоступен:".$test_desable."
         Рейс доступен:".$test_enable."
         ";
