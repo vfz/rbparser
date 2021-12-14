@@ -37,7 +37,7 @@ exit;
 $list_url_tikets=array();
 $id=0;
 
-    while($id<429){
+    while($id<438){
         $id_brake=$id+100;
         echo "
         ===================
@@ -46,7 +46,7 @@ $id=0;
         ";
         if($id_brake>400)
         {
-            $id_brake=428;
+            $id_brake=437;
         }
 
         for($id; $id<=$id_brake; $id++ ){
