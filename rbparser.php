@@ -5,6 +5,37 @@ date_default_timezone_set('Europe/Moscow');
 @$target=$argv[1];//htmlspecialchars($_GET['target']);
 
 
+///////////////
+//
+//  Base functions
+//
+//////////////
+
+function getUrl($url){
+
+    $defaults = array(
+        CURLOPT_URL => $url,
+        CURLOPT_USERAGENT => "Mozilla/4.0",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_HTTPHEADER => array(
+            "Content-Type: text/plain"
+        ),
+        );
+        
+    $curl = curl_init();   
+    curl_setopt_array($curl, $defaults);
+    $response = curl_exec($curl);
+    curl_close($curl);
+    return $response;
+}
 
 function get_list_str_ticket($str){
     $arr_table=explode("<a href=\"/reys/", $str);
@@ -16,7 +47,7 @@ function get_list_str_ticket($str){
     return $result;
 }
 
-// function get_list_tiket($str){
+// function get_list_tikets($str){
     
 //     return $result;
 // }
@@ -43,29 +74,9 @@ function getTicketList(){
             }
 
             for($id; $id<=$id_brake; $id++ ){
-                $defaults = array(
-                    CURLOPT_URL => "https://ros-bilet.ru/perevozchik/evrotrans-ip-yacunov-sp?field_city_tid=&field_city_arrival_tid=&page=0,".$id."/",
-                    CURLOPT_USERAGENT => "Mozilla/4.0",
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_SSL_VERIFYHOST => false,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_HTTPHEADER => array(
-                        "Content-Type: text/plain"
-                    ),
-                    );
+                
                     
-                    $curl = curl_init();   
-                    curl_setopt_array($curl, $defaults);
-                    $response = curl_exec($curl);
-                    
-                    curl_close($curl);
-                    //$response1=iconv("windows-1251","UTF-8",$response);
+                    $response=getUrl("https://ros-bilet.ru/perevozchik/evrotrans-ip-yacunov-sp?field_city_tid=&field_city_arrival_tid=&page=0,".$id."/");
                     
                     $list_url_tikets=array_merge($list_url_tikets, get_list_str_ticket($response));//get_list_str_ticket($response);
                     
@@ -87,6 +98,13 @@ function getTicketList(){
 
 }
 
+
+//////////////
+//
+//  Targets
+//
+//////////////
+
 if ($target=="count_json"){
     $string_for_file=file_get_contents('url_list.json');
     $arr_url=json_decode($string_for_file);
@@ -102,6 +120,33 @@ if ($target=="count_json"){
 if ($target=="save_ticket_list"){
     
     getTicketList();
+}
+
+if ($target=="gate_race_and_ticket"){
+    
+
+    $string_for_file=file_get_contents('url_list.json');
+    $arr_url=json_decode($string_for_file);
+    $i=0;
+    
+    foreach($arr_url as $url)
+    {
+        //"https://ros-bilet.ru".
+        $response=getUrl($url);
+
+        $test_desable = mb_substr_count($response, "В данный момент бронирование невозможно");
+        $test_enable = mb_substr_count($response, "Для данного рейса доступны следующие виды брони");
+        echo "
+        Рейс:".$url."
+        Рейс недоступен:".$test_desable."
+        Рейс доступен:".$test_enable."
+        ";
+        $i++;
+        if ($i>10){
+            break;
+        }
+    }   
+
 }
 
 ?>
