@@ -325,21 +325,26 @@ if ($target=="gate_race_and_ticket"){
             =========================
             Запись в файл Races_info.json (".date("Y-m-d H:i:s").")
             =========================";
-            if($iplus>100){
-                $procces_races=file_get_contents('Races_info.json');
-                $arr_procces_races=json_decode($procces_races);
-                $arr_races_save=array_merge($arr_procces_races,$arr_races);
-                file_put_contents('Races_info.json',json_encode($arr_races_save));
-            }else{
-                file_put_contents('Races_info.json',json_encode($arr_races));    
-            }
+            // if($iplus>10){
+            //     $procces_races=file_get_contents('Races_info.json');
+            //     $arr_procces_races=json_decode($procces_races);
+                
+                
+            //     $arr_races_save=array_merge_recursive($arr_procces_races, $arr_races);
+            //     echo json_encode($arr_races_save);
+            //     file_put_contents('Races_info.json',json_encode($arr_races_save));
+            //     break;
+            // }else{
+            //     file_put_contents('Races_info.json',json_encode($arr_races));
+                    
+            // }
             
-            $arr_races=array();
+            //$arr_races=array();
 
             $i=0;
         }
     }   
-
+    file_put_contents('Races_info.json',json_encode($arr_races));
     //echo json_encode($arr_races);
 
 }
