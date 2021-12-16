@@ -311,7 +311,7 @@ if ($target=="gate_race_and_ticket"){
 
 
         $i++;
-        if ($i>100){
+        if ($i>99){
             //break;
             $iplus=$iplus+$i;
             echo "
@@ -325,10 +325,15 @@ if ($target=="gate_race_and_ticket"){
             =========================
             Запись в файл Races_info.json (".date("Y-m-d H:i:s").")
             =========================";
-            $procces_races=file_get_contents('Races_info.json');
-            $arr_procces_races=json_decode($procces_races);
-            $arr_races_save=array_merge($arr_procces_races,$arr_races);
-            file_put_contents('Races_info.json',json_encode($arr_races_save));
+            if($iplus>100){
+                $procces_races=file_get_contents('Races_info.json');
+                $arr_procces_races=json_decode($procces_races);
+                $arr_races_save=array_merge($arr_procces_races,$arr_races);
+                file_put_contents('Races_info.json',json_encode($arr_races_save));
+            }else{
+                file_put_contents('Races_info.json',json_encode($arr_races));    
+            }
+            
             $arr_races=array();
 
             $i=0;
