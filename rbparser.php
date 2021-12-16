@@ -327,7 +327,7 @@ if ($target=="gate_race_and_ticket"){
             =========================";
             $procces_races=file_get_contents('Races_info.json');
             $arr_procces_races=json_decode($procces_races);
-            $arr_races_save=array_merge($procces_races,$arr_races);
+            $arr_races_save=array_merge($arr_procces_races,$arr_races);
             file_put_contents('Races_info.json',json_encode($arr_races_save));
             $arr_races=array();
 
