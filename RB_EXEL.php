@@ -1,7 +1,7 @@
 <?php
 session_start();
 header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
+// header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -68,6 +68,26 @@ $collum=count($csv['0']);
 // 5 произвести поиск билета из текущая станция отправления + певая++ станция прибытия из списка станций прибытия с итерацией по списку станций прибытия
 //     если билет найден взять его цены и внести в следующую ячейку текущей строки
 //     если билет не найден вносим в ячейку 0
+?>
+<style>
+
+.info table {
+    border-collapse: collapse;
+}
+
+.info tr {
+    border-bottom: 2px solid rosybrown;
+}
+
+.info td {
+    vertical-align: top;
+    padding: 3px;
+	font-size: 14px;
+	white-space: nowrap; 
+}
+
+</style>
+<?php
 
 for($i=1;$i<$str; $i++)
 {
@@ -79,11 +99,42 @@ foreach($reisy AS  $key=>$reis)
 	//$new_table[$key][]='';
 	foreach($reis as $valStation)
 	{
+		// $new_table[$key][$valStation[0].' '.$valStation[2]][]=array('name'=>$valStation[1].' '.$valStation[3],'price'=>$valStation[6]);
 		$new_table[$key][$valStation[0].' '.$valStation[2]][]=$valStation[1].' '.$valStation[3];
+		$new_table_price[$key][$valStation[0].' '.$valStation[2]][]=$valStation[6];
+
+		$tablePrice[$valStation[0].' '.$valStation[2]][$valStation[1].' '.$valStation[3]]=$valStation[6];
+		$startStations[]=$valStation[0].' '.$valStation[2];
+		$stopStations[]=$valStation[1].' '.$valStation[3];
 	}
 
 	
 }
+
+
+
+
+// echo json_encode($new_table);
+// 	exit;	
+foreach($new_table as $key=>$nextReis)
+{
+	echo "<table class=\"info\">";
+	foreach($new_table[$key] as $keyFirstStation=>$firstStation)
+	{
+		// var_dump($firstStation);
+		// exit;
+		echo "<tr><td>рейс ".$key."</td><td>".implode( '</td><td>', $firstStation)."</td></tr>";
+		break;
+	}
+	foreach($new_table_price[$key] as $start=>$valStation)
+	{
+		echo "<tr><td>".$start."</td><td>".implode( '</td><td>', $valStation)."</td></tr>";
+	}
+	echo "</table><br><hr><br>";
+}
+
+	exit;
 echo json_encode($new_table);
 	exit;	
 echo json_encode($reisy);
+?>
