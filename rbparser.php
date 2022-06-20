@@ -64,16 +64,16 @@ function getTicketList(){
     $list_url_tikets=array();
     $id=0;
 
-        while($id<439){
+        while($id<683){
             $id_brake=$id+100;
             echo "
             ===================
             Обработанно ".$id." страниц (".date("Y-m-d H:i:s").")
             ===================
             ";
-            if($id_brake>400)
+            if($id_brake>600)
             {
-                $id_brake=439;
+                $id_brake=683;
             }
 
             for($id; $id<=$id_brake; $id++ ){
@@ -107,7 +107,7 @@ function getTicketList(){
 //  Targets
 //
 //////////////
-
+//Подсчет полученных страниц билетов для анализа
 if ($target=="count_json"){
     $string_for_file=file_get_contents('url_list.json');
     $arr_url=json_decode($string_for_file);
@@ -120,11 +120,12 @@ if ($target=="count_json"){
     exit;
 }
 
+//Создаем список из ссылок для анализа билетов
 if ($target=="save_ticket_list"){
     
     getTicketList();
 }
-
+// Получаем список билетов по рейсам
 if ($target=="gate_race_and_ticket"){
     
 
