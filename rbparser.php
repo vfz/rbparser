@@ -64,16 +64,16 @@ function getTicketList(){
     $list_url_tikets=array();
     $id=0;
 
-        while($id<683){
+        while($id<1052){
             $id_brake=$id+100;
             echo "
             ===================
             Обработанно ".$id." страниц (".date("Y-m-d H:i:s").")
             ===================
             ";
-            if($id_brake>600)
+            if($id_brake>1000)
             {
-                $id_brake=683;
+                $id_brake=1052;
             }
 
             for($id; $id<=$id_brake; $id++ ){
